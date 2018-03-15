@@ -28,7 +28,7 @@ The first one clones the depo in your computer, the second one updates or downlo
 
 # How to see the interface
 
-Use your terminal and go to the directory "prototype"
+Use your terminal and go to the directory "pugs prototype"
 Use the command :
 
     ng serve --open
