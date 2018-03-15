@@ -4,7 +4,7 @@ This project is about creating a tool to help brainstorming session to be what i
 # How to set up Angular
 
 First you'll need to install node.js on this website https://nodejs.org/en/ (that's the easy part, take the "Recommended for most users" version)
-Node js is required for two things :
+Node js is required for two things ;
 - it comes with "npm" a package manager that keep things easy for each library download (as simple as "npm install <name of the libraby>"
 - it allows you to run a local server for testing the web interface with live reload (you change a line of code, the UI change aswell at the same time)
 
