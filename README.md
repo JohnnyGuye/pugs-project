@@ -1,4 +1,4 @@
-# pugs-project
+# P.U.G.project
 This project is about creating a tool to help brainstorming session to be what it is supposed to be : a tool to share ideas.
 
 # How to set up Angular
