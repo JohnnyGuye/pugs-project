@@ -1,0 +1,126 @@
+
+<!-- Header -->
+  <header id="header" class="alt">
+    <div class="logo"><a href="index.html">Based on the template <span>Hielo</span></a></div>
+    <a href="#menu">Menu</a>
+  </header>
+
+<!-- Nav -->
+  <nav id="menu">
+    <ul class="links">
+      <li><a href="index.html">Home</a></li>
+    </ul>
+  </nav>
+
+<!-- Banner -->
+  <section class="banner full">
+    <article>
+      <img src="images/slide01.jpg" alt="" />
+        <wave style="position: absolute; left: 0; right: 0; height: 100%; width: 100%"></wave>
+      <div class="inner">
+        <header>
+          <p>Speak and I'll tell how much you valued your team!</p>
+          <h2>P<sub>Playground for </sub>U<sub>unification of </sub>G<sub>groups</sub></h2>
+        </header>
+      </div>
+    </article>
+    <!-- <article>
+      <img src="images/slide02.jpg" alt="" />
+      <div class="inner">
+        <header>
+          <p>Lorem ipsum dolor sit amet nullam feugiat</p>
+          <h2>Magna etiam</h2>
+        </header>
+      </div>
+    </article>
+    <article>
+      <img src="images/slide03.jpg"  alt="" />
+      <div class="inner">
+        <header>
+          <p>Sed cursus aliuam veroeros lorem ipsum nullam</p>
+          <h2>Tempus dolor</h2>
+        </header>
+      </div>
+    </article>
+    <article>
+      <img src="images/slide04.jpg"  alt="" />
+      <div class="inner">
+        <header>
+          <p>Adipiscing lorem ipsum feugiat sed phasellus consequat</p>
+          <h2>Etiam feugiat</h2>
+        </header>
+      </div>
+    </article>
+    <article>
+      <img src="images/slide05.jpg"  alt="" />
+      <div class="inner">
+        <header>
+          <p>Ipsum dolor sed magna veroeros lorem ipsum</p>
+          <h2>Lorem adipiscing</h2>
+        </header>
+      </div>
+    </article> -->
+  </section><!--The content below is only a placeholder and can be replaced.-->
+
+<div style="border: 1px solid black; text-align: center; width: 100%; margin: auto; padding: 0 35%">
+<canvas style="width: 400px" baseChart width="400" height="400"
+  [datasets]="vocalsDatas"
+  [labels]="vocalSpeakers"
+  [legend]="vocalLegend"
+  [chartType]="'doughnut'"
+  (chartHover)="chartHovered($event)"
+  (chartClick)="chartClicked($event)"></canvas>
+
+<!-- <canvas baseChart width="400" height="400"
+            [datasets]="lineChartData"
+            [labels]="lineChartLabels"
+            [options]="lineChartOptions"
+            [legend]="lineChartLegend"
+            [chartType]="lineChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas> -->
+</div>
+
+<!-- Three -->
+  <section id="three" class="wrapper style2">
+    <div class="inner">
+      <header class="align-center">
+        <p class="special">Get a look on your team !</p>
+        <h2>Team members</h2>
+      </header>
+      <div class="gallery">
+        <div>
+          <div class="image fit">
+            <a href="#"><img src="assets/images/arafa_mahmood.jpg" alt="" /></a>
+          </div>
+        </div>
+        <div>
+          <div class="image fit">
+            <a href="#"><img src="assets/images/brandon_startz.jpeg" alt="" /></a>
+          </div>
+        </div>
+        <div>
+          <div class="image fit">
+            <a href="#"><img src="assets/images/antoine_pincon.jpg" alt="" /></a>
+          </div>
+        </div>
+        <div>
+          <div class="image fit">
+            <a href="#"><img src="assets/images/johnny_guye.jpg" alt="" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Footer -->
+  <footer id="footer">
+    <div class="container">
+      <ul class="icons">
+        <li><a href="https://github.com/JohnnyGuye/pugs-project" class="icon fa-github"><span class="label">Github</span></a></li>
+      </ul>
+    </div>
+    <div class="copyright">
+      &copy; Untitled. All rights reserved.
+    </div>
+  </footer>
