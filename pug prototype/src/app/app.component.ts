@@ -1,11 +1,16 @@
 import { Component } from '@angular/core';
 
+import { DatabaseService }      from "./services/database.service";
+import { User }                 from "./models/user";
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  // Charts
   public vocalsDatas: Array<any> = [{data: [2,3,4,5]}]
   public vocalSpeakers: Array<string> = ["Antoine", "Arafa", "Brandon", "Johnny"]
   public vocalLegend: any = "Legend never dies"
@@ -15,15 +20,16 @@ export class AppComponent {
     {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'},
     {data: [18, 48, 77, 9, 100, 27, 40], label: 'Series C'}
   ];
-  public lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+
   public lineChartOptions:any = {
     responsive: true
   };
 
   public lineChartLegend:boolean = true;
 
-  constructor() {
+  constructor(private db: DatabaseService) {
     setInterval(() => { this.randomize() }, 3000);
+    this.updateUser()
   }
 
   public randomize():void {
@@ -44,5 +50,12 @@ export class AppComponent {
 
   public chartHovered(e:any):void {
     console.log(e);
+  }
+
+  // Database
+
+  private updateUser() {
+    let u = new User()
+    this.db.updateUser(u)
   }
 }
