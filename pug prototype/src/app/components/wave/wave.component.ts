@@ -23,6 +23,9 @@ class Wave {
 })
 export class WaveComponent implements OnInit {
 
+  @Input()
+  randomColor: boolean = false
+
   static readonly DEFAULT_OPTIONS = {
     speed: -2,
     amplitude: 50,
@@ -70,7 +73,8 @@ export class WaveComponent implements OnInit {
     return (Date.now() - this.starttime) / 1000
   }
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     this.starttime = this.prevtime = Date.now()
@@ -116,9 +120,6 @@ export class WaveComponent implements OnInit {
 
     this.width = el.width = this.holder.nativeElement.clientWidth;
     this.height = el.height = this.holder.nativeElement.clientHeight;
-    // el.style.width = window.innerWidth + 'px';
-    // el.style.height = window.innerHeight + 'px';
-    console.log(this.width, this.height, this.context)
 
     this.waveWidth = this.width * 0.95;
     this.waveLeft = this.width * 0.025;
@@ -142,9 +143,13 @@ export class WaveComponent implements OnInit {
     length = void 0;
   }
 
-
   ease(percent, amplitude) : number {
     return amplitude * (Math.sin(percent * PI2 - HALFPI) + 1) * 0.5;
+  }
+
+  private generateColor(seed: number, delta: number): string {
+    let color = (delta: number, seed: number) => {  return Math.floor(Math.sin(delta+seed) * 128 + 128); }
+    return "rgba(" + color(delta, seed) + "," + color(delta, seed+1) + "," + color(delta, seed+2) +",0.7)"
   }
 
   drawSine (delta: number, options: any = {}) {

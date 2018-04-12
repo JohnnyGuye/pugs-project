@@ -1,0 +1,14 @@
+{
+  "data_type":"an id for every kind of message sent from or received by matlab",
+  "package_number": "a number increasing by one every package sent to verify you didn't miss one",
+  "timestamp": "number for the start of data measure",
+  "time": "number for the length of the data measure",
+  "speakers":
+  [
+    {
+      "name": "name of the speaker",
+      "time_spoken": "number for time spoken",
+      "timestamp": "when the speaker started to speak",
+    }
+  ]
+}
