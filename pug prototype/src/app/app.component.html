@@ -15,8 +15,7 @@
 <!-- Banner -->
   <section class="banner full">
     <article>
-      <img src="images/slide01.jpg" alt="" />
-        <wave style="position: absolute; left: 0; right: 0; height: 100%; width: 100%"></wave>
+      <wave style="position: absolute; left: 0; right: 0; height: 100%; width: 100%"></wave>
       <div class="inner">
         <header>
           <p>Speak and I'll tell how much you valued your team!</p>
@@ -62,24 +61,23 @@
     </article> -->
   </section><!--The content below is only a placeholder and can be replaced.-->
 
-<div style="border: 1px solid black; text-align: center; width: 100%; margin: auto; padding: 0 35%">
-<canvas style="width: 400px" baseChart width="400" height="400"
-  [datasets]="vocalsDatas"
-  [labels]="vocalSpeakers"
-  [legend]="vocalLegend"
-  [chartType]="'doughnut'"
-  (chartHover)="chartHovered($event)"
-  (chartClick)="chartClicked($event)"></canvas>
-
-<!-- <canvas baseChart width="400" height="400"
-            [datasets]="lineChartData"
-            [labels]="lineChartLabels"
-            [options]="lineChartOptions"
-            [legend]="lineChartLegend"
-            [chartType]="lineChartType"
-            (chartHover)="chartHovered($event)"
-            (chartClick)="chartClicked($event)"></canvas> -->
-</div>
+  <section id="two" class="wrapper style2" style="box-shadow: 0 0 10px 10px #ffdd923d inset">
+    <div class="inner">
+      <header class="align-center">
+        <p class="special">Participation</p>
+        <h2>Who's talking ?</h2>
+      </header>
+      <div style="text-align: center; width: 100%; margin: auto; padding: 0 35%">
+      <canvas style="width: 400px" baseChart width="400" height="400"
+        [datasets]="vocalsDatas"
+        [labels]="vocalSpeakers"
+        [legend]="vocalLegend"
+        [chartType]="'polarArea'"
+        (chartHover)="chartHovered($event)"
+        (chartClick)="chartClicked($event)"></canvas>
+      </div>
+    </div>
+  </section>
 
 <!-- Three -->
   <section id="three" class="wrapper style2">

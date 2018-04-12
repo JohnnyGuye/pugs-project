@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { DatabaseService }      from "./services/database.service";
+import { DataService }          from "./services/data.service";
 import { User }                 from "./models/user";
 
 @Component({
@@ -11,8 +12,6 @@ import { User }                 from "./models/user";
 export class AppComponent {
 
   // Charts
-  public vocalsDatas: Array<any> = [{data: [2,3,4,5]}]
-  public vocalSpeakers: Array<string> = ["Antoine", "Arafa", "Brandon", "Johnny"]
   public vocalLegend: any = "Legend never dies"
 
   public lineChartData:Array<any> = [
@@ -27,9 +26,23 @@ export class AppComponent {
 
   public lineChartLegend:boolean = true;
 
-  constructor(private db: DatabaseService) {
-    setInterval(() => { this.randomize() }, 3000);
-    this.updateUser()
+  get vocalsDatas() {
+    return [{data: this.dataServ.data.timesSpokenPerc}]
+  }
+
+  get vocalSpeakers() {
+    return this.dataServ.data.speakers
+  }
+
+  constructor(
+    private db: DatabaseService,
+    private dataServ: DataService) {
+
+    setInterval( ()=> {
+      let speakers = this.dataServ.data.speakers
+      let r = Math.floor(Math.random()*speakers.length)
+      this.dataServ.data.addTimeTo(speakers[r], 2)
+    }, 500)
   }
 
   public randomize():void {

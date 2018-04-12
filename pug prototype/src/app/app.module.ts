@@ -11,6 +11,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment }      from "../environments/environment";
 
 import { DatabaseService }    from "./services/database.service";
+import { DataService }        from "./services/data.service";
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { DatabaseService }    from "./services/database.service";
     AngularFirestoreModule
   ],
   providers: [
-    DatabaseService
+    DatabaseService,
+    DataService
   ],
   bootstrap: [AppComponent]
 })
