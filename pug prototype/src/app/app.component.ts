@@ -37,6 +37,16 @@ export class AppComponent {
 
   }
 
+  public value: string = "Johnny"
+
+  public myFunction() {
+    console.log("I pressed a button")
+  }
+
+  public get iWantToShowSomething(): string {
+    return "I'm something"
+  }
+
   public get startDate(): string {
     if(this.dataServ.data.start)
       return this.dataServ.data.start.toLocaleTimeString()

@@ -23,42 +23,6 @@
         </header>
       </div>
     </article>
-    <!-- <article>
-      <img src="images/slide02.jpg" alt="" />
-      <div class="inner">
-        <header>
-          <p>Lorem ipsum dolor sit amet nullam feugiat</p>
-          <h2>Magna etiam</h2>
-        </header>
-      </div>
-    </article>
-    <article>
-      <img src="images/slide03.jpg"  alt="" />
-      <div class="inner">
-        <header>
-          <p>Sed cursus aliuam veroeros lorem ipsum nullam</p>
-          <h2>Tempus dolor</h2>
-        </header>
-      </div>
-    </article>
-    <article>
-      <img src="images/slide04.jpg"  alt="" />
-      <div class="inner">
-        <header>
-          <p>Adipiscing lorem ipsum feugiat sed phasellus consequat</p>
-          <h2>Etiam feugiat</h2>
-        </header>
-      </div>
-    </article>
-    <article>
-      <img src="images/slide05.jpg"  alt="" />
-      <div class="inner">
-        <header>
-          <p>Ipsum dolor sed magna veroeros lorem ipsum</p>
-          <h2>Lorem adipiscing</h2>
-        </header>
-      </div>
-    </article> -->
   </section><!--The content below is only a placeholder and can be replaced.-->
 
   <section id="two" class="wrapper style2" style="box-shadow: 0 0 10px 10px #ffdd923d inset">
@@ -71,9 +35,12 @@
           Data computed start: {{startDate}}
         <br/>
           Data computation time ellapsed: {{timeComputed}}
+          <br/>
+          {{iWantToShowSomething}}
+          <input [(ngModel)]="value" />
       </p>
+      <button (click)="myFunction()">I do something</button>
       <div class="grid-style">
-
         <div>
           <div class="box">
             <div class="content">
