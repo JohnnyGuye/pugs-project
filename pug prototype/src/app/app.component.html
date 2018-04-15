@@ -67,14 +67,53 @@
         <p class="special">Participation</p>
         <h2>Who's talking ?</h2>
       </header>
-      <div style="text-align: center; width: 100%; margin: auto; padding: 0 35%">
-      <canvas style="width: 400px" baseChart width="400" height="400"
-        [datasets]="vocalsDatas"
-        [labels]="vocalSpeakers"
-        [legend]="vocalLegend"
-        [chartType]="'polarArea'"
-        (chartHover)="chartHovered($event)"
-        (chartClick)="chartClicked($event)"></canvas>
+      <p class="align-center">
+          Data computed start: {{startDate}}
+        <br/>
+          Data computation time ellapsed: {{timeComputed}}
+      </p>
+      <div class="grid-style">
+
+        <div>
+          <div class="box">
+            <div class="content">
+              <header class="align-center">
+                <p>
+                  Time speaking
+                </p>
+              </header>
+              <div style="text-align: center;">
+                <canvas style="width:300px" baseChart width="400" height="400"
+                  [datasets]="vocalsDatas"
+                  [labels]="vocalSpeakers"
+                  [legend]="vocalLegend"
+                  [chartType]="'polarArea'"
+                  (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="box">
+            <div class="content">
+              <header class="align-center">
+                <p>Speak up</p>
+              </header>
+              <div style="text-align: right; width: 100%; margin: auto;">
+                <canvas style="width: 300px" baseChart width="400" height="400"
+                  [datasets]="speakUpDatas"
+                  [labels]="vocalSpeakers"
+                  [legend]="false"
+                  [chartType]="'bar'"
+                  (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </section>

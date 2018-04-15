@@ -1,31 +1,42 @@
 export class SpeakerData {
   public speaker: string = ""
   public timeSpoken: number = 0
-  public speakTaken: number = 0
+  public speakUp: number = 0
 }
 
 export class Data {
 
+  public start: Date
   private _data: Array<SpeakerData> = []
   private _speakers: Array<string>  = []
   private _timesSpoken: Array<number> = []
   private _timesSpokenPerc: Array<number> = []
+
+  private _speakUp: Array<number> = []
 
   constructor() {
 
   }
 
   getOrCreateSpeaker(name: string) : SpeakerData {
-    for(let i = 0; i < this._data.length; i++) {
-      if(this._data[i].speaker == name) {
-        return this._data[i]
-      }
-    }
+    let idx = this.getIndex(name)
+    if(idx != -1) return this._data[idx]
+
     let sd = new SpeakerData()
     sd.speaker = name
     this._data.push( sd )
+    this._speakUp.push( 0 )
     this._computeSpeakers()
     return sd
+  }
+
+  private getIndex(name: string): number {
+    for(let i = 0; i < this._data.length; i++) {
+      if(this._data[i].speaker == name) {
+        return i
+      }
+    }
+    return -1
   }
 
   private _orderByTimeSpoken() {
@@ -55,9 +66,14 @@ export class Data {
   addTimeTo(name: string, time: number) {
     let sd = this.getOrCreateSpeaker(name)
     sd.timeSpoken += time
+    this._speakUp[this.getIndex(name)]++
     //this._orderByTimeSpoken()
     this._computeTimesSpoken()
     this._computeSpeakers()
+  }
+
+  get speakUp() : Array<number> {
+    return this._speakUp
   }
 
   get speakers() : Array<string> {
@@ -71,4 +87,6 @@ export class Data {
   get timesSpokenPerc() : Array<number> {
     return this._timesSpokenPerc
   }
+
+  get
 }

@@ -41,6 +41,18 @@ With atom installed, when you are in the prototype folder, you can just write :
 
 And atom opens all the prototype for you.
 
+# Test the charts & sockets
+
+We have now a tester for charts that is supposed to display a balanced discussion overtime
+Use your terminal an go to the directory "socket-test"
+Use the command :
+
+    node data-server.js
+
+It should open a server at localhost:4201
+While it's open you can open an other terminal and run the interface (see above) or just refresh your page.
+The mimic server and the UI will communicate
+
 > Never hesitate to ask, we are all here to learn, I might not learn much about the technical part but I have so much to learn for the other aspects ! - Johnny
 
 # External resources :
