@@ -66,6 +66,7 @@ export class DataService {
       //console.log("Recieved: ", data)
       switch(data.dataType) {
         case "speaking_data":
+          console.log(data)
           if(this.data.start == null)  this.data.start = new Date(data.timestamp)
           this.lastRecep = new Date(data.timestamp)
 
@@ -83,7 +84,7 @@ export class DataService {
 
     setInterval(() => {
       this.socket.send({dataType:"speaking_data_ask"})
-    },1000)
+    },500)
   }
 
   get ellapsed() {

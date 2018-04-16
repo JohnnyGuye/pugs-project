@@ -1,154 +1,171 @@
 "use strict";
 // Optional. You will see this name in eg. 'ps' or 'top' command
-process.title = 'node-chat';
-// Port where we'll run the websocket server
-var webSocketsServerPort = 8001;
-// websocket and http servers
-var webSocketServer = require('websocket').server;
-var http = require('http');
-/**
- * Global variables
- */
-// latest 100 messages
-var history = [ ];
-// list of currently connected clients (users)
-var clients = [ ];
+process.title = 'PUG server';
 
-function randRange(min, max) {
-  if(max == null) max = 0
-  if(max < min) max,min=min,max
-  return Math.floor(Math.random() * (max-min) + min)
+// ========= Imports
+let Server  = require('websocket').server
+let http    = require('http')
+let Util    = require('./util.js')
+let Log     = require('./log.js')
+
+// ========= Config
+let config = {
+  port: 8001
 }
-/**
- * Helper function for escaping input strings
- */
-function htmlEntities(str) {
-  return String(str)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+// ========= Enums & Constants
+let DataTypes = Object.freeze({
+  HELLO:                "hello",
+  ASK_SPEAKER_DATA:     "speaking_data_ask",
+  SPEAKER_DATA:         "speaking_data"
+})
+
+let SPEAKER_NAMES = ["Antoine", "Brandon", "Johnny", "Arafa", ""]
+
+// ========= Class
+
+class Speak {
+  constructor() {
+    this.name = ""
+    this.timeSpoken = 0
+    this.timestamp = Date.now()
+  }
 }
-// Array with some colors
-var colors = [ 'red', 'green', 'blue', 'magenta', 'purple', 'plum', 'orange' ];
-// ... in random order
-colors.sort(function(a,b) { return Math.random() > 0.5; } );
+
+class SpeakerData {
+  constructor() {
+    this.dataType = DataTypes.SPEAKER_DATA
+    this.packageNumber = -1
+    this.timestamp = 0
+    this.time = 0
+    this.speakers = []
+  }
+
+  init() {
+    this.packageNumber = 0
+    this.timestamp = Date.now()
+    this.time = 0
+    this.speakers = []
+  }
+
+  addSpeak(speak) {
+    this.packageNumber += 1
+    this.time       += speak.timeSpoken
+    this.timestamp  = speak.timestamp
+    this.speakers.push( speak )
+    Log.warn("update")
+  }
+
+  lastSpeakData() {
+    let lsd = new SpeakerData()
+    lsd.packageNumber = this.packageNumber
+    lsd.time          = this.time
+    lsd.timestamp     = this.timestamp
+    if(this.speakers.length > 0)
+      lsd.speakers    = this.speakers.slice(-1)
+    return lsd
+  }
+}
+
+// ========= Globals
+let client_users = [ ];
+
+let sessionSpeakerDatas = null
+
+function initSpeakerData() {
+  Log.warn("Starting a conversation")
+  if(!sessionSpeakerDatas)
+    sessionSpeakerDatas = new SpeakerData()
+  sessionSpeakerDatas.init()
+}
+// ======= -----------------------
+// For testing purpose
+// ======= -----------------------
+let lastIdx = Util.randRange(SPEAKER_NAMES.length)
+function generateRandomSpeak() {
+  let s = new Speak()
+  let r = Util.randRange(1,SPEAKER_NAMES.length)
+  lastIdx = (r + lastIdx) % SPEAKER_NAMES.length
+  s.name = SPEAKER_NAMES[lastIdx]
+  s.timestamp = Date.now()
+  s.timeSpoken = s.timestamp - sessionSpeakerDatas.timestamp
+
+  sessionSpeakerDatas.addSpeak( s )
+  return sessionSpeakerDatas.lastSpeakData( s )
+}
+
+// ======= -----------------------
 /**
- * HTTP server
+ * Create the server
  */
-var server = http.createServer(function(request, response) {
-  // Not important for us. We're writing WebSocket server,
-  // not HTTP server
+let server = http.createServer((request, response) => {});
+server.listen(config.port, function() {
+  Log.warn(" Server is listening on port "  + config.port);
 });
-server.listen(webSocketsServerPort, function() {
-  console.log((new Date()) + " Server is listening on port "
-      + webSocketsServerPort);
-});
-/**
- * WebSocket server
- */
-var wsServer = new webSocketServer({
-  // WebSocket server is tied to a HTTP server. WebSocket
-  // request is just an enhanced HTTP request. For more info
-  // http://tools.ietf.org/html/rfc6455#page-6
-  httpServer: server
-});
+
+let wsServer = new Server({ httpServer: server });
+
+function broadcastUTF(json) {
+  for (let cu of client_users) {
+    cu.sendUTF(json);
+  }
+}
+
 // This callback function is called every time someone
 // tries to connect to the WebSocket server
 wsServer.on('request', function(request) {
-  console.log((new Date()) + ' Connection from origin '
-      + request.origin + '.');
-  // accept connection - you should check 'request.origin' to
-  // make sure that client is connecting from your website
-  // (http://en.wikipedia.org/wiki/Same_origin_policy)
-  var connection = request.accept(null, request.origin);
-  // we need to know client index to remove them on 'close' event
-  var index = clients.push(connection) - 1;
-  var userName = false;
-  var userColor = false;
 
-  let speakerNames = ["Antoine", "Brandon", "Johnny", "Arafa", ""]
-  let lastIdx = randRange(speakerNames.length)
+  Log.warn('Connection from origin ' + request.origin + '.')
+  let connection = request.accept(null, request.origin);
+  // we need to know client index to remove them on 'close' event
+  let index = client_users.push(connection) - 1;
+  let userName = false;
+
+  let lastIdx = Util.randRange(SPEAKER_NAMES.length)
   let lastDate = Date.now()
-  console.log((new Date()) + ' Connection accepted.');
-  // send back chat history
-  if (history.length > 0) {
-    connection.sendUTF(
-        JSON.stringify({ type: 'history', data: history} ));
-  }
+
+  Log.good("Connection accepted.")
+
   // user sent some message
   connection.on('message', function(message) {
-    if (message.type === 'utf8') { // accept only text
-     let data = JSON.parse(message.utf8Data)
+    if (message.type !== 'utf8') return
+
+    let data = JSON.parse(message.utf8Data)
     // first message sent by user is their name
-     switch(data.dataType) {
-       case "hello":
-         // remember user name
-         userName = htmlEntities(data.name);
-         // get random color and send it back to the user
-         userColor = colors.shift();
-         connection.sendUTF(
-             JSON.stringify({ dataType: "attribution", type:'color', data: userColor }));
-         console.log((new Date()) + ' User is known as: ' + userName
-                     + ' with ' + userColor + ' color.');
-        break;
-      case "speaking_data_ask":
+    switch(data.dataType) {
 
-        let now = Date.now()
-        let time = 0
-        let speakers = []
-        let nbSpeakers = randRange(2,8)
-        for (let i = 0; i < nbSpeakers; i++) {
-          let r = randRange(1,speakerNames.length)
-          lastIdx = (r + lastIdx) % speakerNames.length
-          let name = speakerNames[lastIdx]
-          let timeSpoken = randRange(1,20)
+      case DataTypes.HELLO:
 
-          speakers.push({ name: name, timeSpoken: timeSpoken, timestamp: now })
-          time += timeSpoken * 1000
-        }
-        time /= 1000
+      userName = Util.htmlEntities(data.name)
+      connection.sendUTF( JSON.stringify({ dataType: "attribution" }) )
 
-        let newDatas = {
-          dataType: "speaking_data",
-          packageNumber: 1,
-          timestamp: now,
-          time: time,
-          speakers: speakers
-        }
 
-        let json = JSON.stringify( newDatas )
-        //connection.sendUTF( json )
-        console.log((new Date()) + ' Received Message from '
-                    + userName + ' asking for speakers data');
+      Log.log('User connection: ' + connection.adress );
 
-        // we want to keep history of all sent messages
-        // var obj = {
-        //   time: (new Date()).getTime(),
-        //   text: htmlEntities(message.utf8Data),
-        //   author: userName,
-        //   color: userColor
-        // };
-        // history.push(obj);
-        // history = history.slice(-100);
-        // broadcast message to all connected clients
-        // var json = JSON.stringify({ type:'message', data: obj });
-        for (var i=0; i < clients.length; i++) {
-          clients[i].sendUTF(json);
-        }
-        break;
-      default:
-        break;
-     }
+      if(sessionSpeakerDatas === null || sessionSpeakerDatas.packageNumber == -1)
+        initSpeakerData()
+
+      broadcastUTF( JSON.stringify( sessionSpeakerDatas ) )
+
+      break;
+
+    case DataTypes.ASK_SPEAKER_DATA:
+
+      let json = JSON.stringify( generateRandomSpeak() )
+      Log.log('From ' + userName + ': asks for speakers data');
+      broadcastUTF(json)
+
+      break;
+    default:
+      break;
     }
   });
   // user disconnected
   connection.on('close', function(connection) {
-    if (userName !== false && userColor !== false) {
-      console.log((new Date()) + " Peer "
-          + connection.remoteAddress + " disconnected.");
-      // remove user from the list of connected clients
-      clients.splice(index, 1);
-      // push back user's color to be reused by another user
-      colors.push(userColor);
+    if (userName !== false ) {
+      Log.err("Peer " + connection.remoteAddress + " disconnected.");
+      // remove user from the list of connected client_users
+      client_users.splice(index, 1);
     }
   });
 });
