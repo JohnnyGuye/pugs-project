@@ -39,7 +39,10 @@
           {{iWantToShowSomething}}
           <input [(ngModel)]="value" />
       </p>
-      <button (click)="myFunction()">I do something</button>
+      <!--button (click)="myFunction()">Press & Talk</button-->
+
+	  <audio id="speaker" controls></audio> <!-- not needed, hence remove -->
+	  <button onclick=talkFunction() name="talkbtn" id="talkbtn">Press & Talk</button>
       <div class="grid-style">
         <div>
           <div class="box">

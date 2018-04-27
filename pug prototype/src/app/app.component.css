@@ -1,1 +1,13 @@
+#talkbtn {
+	background: black;
+	border: 1px double cayan;
+}
+
+#talkbtn.changed {
+	background: red;
+	border: 1px double green;
+}
+audio#speaker {
+	display: none;
+}
 

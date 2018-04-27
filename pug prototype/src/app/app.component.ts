@@ -37,7 +37,7 @@ export class AppComponent {
 
   }
 
-  public value: string = "Johnny"
+  public value: string = "Arafa"
 
   public myFunction() {
     console.log("I pressed a button")
