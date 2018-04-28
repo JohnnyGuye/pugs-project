@@ -66,7 +66,8 @@ export class DataService {
       //console.log("Recieved: ", data)
       switch(data.dataType) {
         case "speaking_data":
-          console.log(data)
+
+          //console.log(this.data)
           if(this.data.start == null)  this.data.start = new Date(data.timestamp)
           this.lastRecep = new Date(data.timestamp)
 

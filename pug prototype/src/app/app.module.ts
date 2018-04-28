@@ -13,7 +13,7 @@ import { environment }      from "../environments/environment";
 
 import { DatabaseService }    from "./services/database.service";
 import { DataService }        from "./services/data.service";
-
+import { AudioService }         from "./services/audio.service"
 
 @NgModule({
   declarations: [
@@ -30,7 +30,8 @@ import { DataService }        from "./services/data.service";
   ],
   providers: [
     DatabaseService,
-    DataService
+    DataService,
+    AudioService
   ],
   bootstrap: [AppComponent]
 })

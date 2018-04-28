@@ -1,7 +1,7 @@
 export class SpeakerData {
   public speaker: string = ""
   public timeSpoken: number = 0
-  public speakUp: number = 0
+  public speakUp: number = -1
 }
 
 export class Data {

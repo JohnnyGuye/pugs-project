@@ -3,11 +3,7 @@
 	border: 1px double cayan;
 }
 
-#talkbtn.changed {
+button.changed {
 	background: red;
 	border: 1px double green;
 }
-audio#speaker {
-	display: none;
-}
-

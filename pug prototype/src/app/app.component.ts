@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 
 import { DatabaseService }      from "./services/database.service";
 import { DataService }          from "./services/data.service";
+import { AudioService }         from "./services/audio.service";
+
 import { User }                 from "./models/user";
 
 @Component({
@@ -33,8 +35,17 @@ export class AppComponent {
 
   constructor(
     private db: DatabaseService,
-    private dataServ: DataService) {
+    private dataServ: DataService,
+    private audioServ: AudioService) {
 
+  }
+
+  public toggleRecording() {
+      this.audioServ.toggle()
+  }
+
+  public get recording(): boolean {
+    return this.audioServ.isRecording
   }
 
   public value: string = "Arafa"

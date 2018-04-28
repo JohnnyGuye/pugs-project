@@ -41,8 +41,9 @@
       </p>
       <!--button (click)="myFunction()">Press & Talk</button-->
 
-	  <audio id="speaker" controls></audio> <!-- not needed, hence remove -->
-	  <button onclick=talkFunction() name="talkbtn" id="talkbtn">Press & Talk</button>
+	  <!-- <audio id="speaker" controls></audio> not needed, hence remove -->
+	  <button (click)="toggleRecording()" [class.changed]="recording">Press & Talk</button>
+
       <div class="grid-style">
         <div>
           <div class="box">
