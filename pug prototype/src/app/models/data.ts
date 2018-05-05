@@ -2,7 +2,9 @@ export const DataTypes = Object.freeze({
   HELLO:                "hello",
   ASK_SPEAKER_DATA:     "speaking_data_ask",
   SPEAKER_DATA:         "speaking_data",
-  SPEAKER_RECOGNITION_DATA:   "speaker_recognition_data"
+  SPEAKER_RECOGNITION_DATA:   "speaker_recognition_data",
+  ASK_RESET:            "ask_reset",
+  RESETED:              "reseted"
 })
 
 export class Speak {
@@ -30,7 +32,7 @@ export class SpeakerData {
     this.packageNumber = 0
     this.timestamp = Date.now()
     this.time = 0
-    this.speakers = []
+    this.speakers.length = 0
   }
 
   addSpeak(speak) {
@@ -55,6 +57,11 @@ export class UISpeakerData {
   public speaker: string = ""
   public timeSpoken: number = 0
   public speakUp: number = -1
+
+  reset() {
+    this.timeSpoken = 0
+    this.speakUp = 0
+  }
 }
 
 export class UIData {
@@ -69,6 +76,19 @@ export class UIData {
 
   constructor() {
 
+  }
+
+  reset() {
+    this.start = new Date()
+    this._data.forEach(s => s.reset())
+    for(let i in this._timesSpoken)
+      this._timesSpoken[i] = 0
+    for(let i in this._timesSpokenPerc ) {
+      this._timesSpokenPerc[i] = 0
+    }
+    for(let i in this._speakUp) {
+      this._speakUp[i] = 0
+    }
   }
 
   getOrCreateSpeaker(name: string) : UISpeakerData {
@@ -97,22 +117,28 @@ export class UIData {
   }
 
   private _computeSpeakers() {
-    this._speakers = []
+    this._speakers.length = 0
     for(let sd of this._data) {
       this._speakers.push( sd.speaker )
     }
   }
 
   private _computeTimesSpoken() {
-    this._timesSpoken = []
-    this._timesSpokenPerc = []
+
     let sum = 0
-    for(let sd of this._data) {
-      this._timesSpoken.push( sd.timeSpoken )
+    for(let i = 0; i < this._data.length; i++) {
+      let sd = this._data[i]
+      if( i < this._timesSpoken.length)
+        this._timesSpoken[i] = sd.timeSpoken
+      else
+        this._timesSpoken.push( sd.timeSpoken )
       sum += sd.timeSpoken
     }
     for(let i = 0; i < this._timesSpoken.length; i++) {
-      this._timesSpokenPerc.push( this._timesSpoken[i] * 100 / sum)
+      if( i < this._timesSpokenPerc.length)
+        this._timesSpokenPerc[i] = ( this._timesSpoken[i] * 100 / sum)
+      else
+        this._timesSpokenPerc.push( this._timesSpoken[i] * 100 / sum)
     }
   }
 
@@ -140,6 +166,4 @@ export class UIData {
   get timesSpokenPerc() : Array<number> {
     return this._timesSpokenPerc
   }
-
-  get
 }

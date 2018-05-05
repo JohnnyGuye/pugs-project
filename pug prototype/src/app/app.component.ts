@@ -21,12 +21,14 @@ export class AppComponent {
 
   public lineChartLegend:boolean = true;
 
+  private _vocalDatas = [{data: this.dataServ.data.timesSpokenPerc}]
   get vocalsDatas() {
     return [{data: this.dataServ.data.timesSpokenPerc}]
   }
 
+  private _speakUpDatas = [{data: this.dataServ.data.speakUp}]
   get speakUpDatas() {
-    return [{data: this.dataServ.data.speakUp}]
+    return this._speakUpDatas
   }
 
   get vocalSpeakers() {
@@ -62,11 +64,8 @@ export class AppComponent {
     return this.dataServ.isSocketOpen
   }
 
-  /*public get socketOpen(): boolean {
-    return this.dataServ.isSocketOpen
-  }*/
-  public get iWantToShowSomething(): string {
-    return "I'm something"
+  resetConversation() {
+    this.dataServ.resetConversation()
   }
 
   public get startDate(): string {
@@ -82,15 +81,6 @@ export class AppComponent {
     }
     return " - "
   }
-  // events
-  public chartClicked(e:any):void {
-    console.log(e);
-  }
-
-  public chartHovered(e:any):void {
-    console.log(e);
-  }
-
   // Database
 
   private updateUser() {

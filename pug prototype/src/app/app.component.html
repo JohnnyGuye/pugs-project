@@ -25,6 +25,12 @@
     </article>
   </section><!--The content below is only a placeholder and can be replaced.-->
 
+  <section id="one" class="wrapper style2">
+    <div class="inner">
+      <story-game></story-game>
+    </div>
+  </section>
+
   <section id="two" class="wrapper style2" style="box-shadow: 0 0 10px 10px #ffdd923d inset">
     <div class="inner">
       <header class="align-center">
@@ -36,15 +42,15 @@
         <br/>
           Data computation time ellapsed: {{timeComputed}}
           <br/>
-          {{iWantToShowSomething}}
           <input [(ngModel)]="value" />
           <button *ngIf="!isSocketOpen" (click)="openConnection()">Start</button>
           <button *ngIf="isSocketOpen" (click)="closeConnection()">Stop</button>
+          <button *ngIf="isSocketOpen" (click)="resetConversation()">Stop & Reset</button>
       </p>
       <!--button (click)="myFunction()">Press & Talk</button-->
 
 	  <!-- <audio id="speaker" controls></audio> not needed, hence remove -->
-	  <button (click)="toggleRecording()" [class.changed]="recording">Press & Talk</button>
+	  <!-- <button (click)="toggleRecording()" [class.changed]="recording">Press & Talk</button> -->
 
       <div class="grid-style">
         <div>
@@ -60,9 +66,7 @@
                   [datasets]="vocalsDatas"
                   [labels]="vocalSpeakers"
                   [legend]="vocalLegend"
-                  [chartType]="'polarArea'"
-                  (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)"></canvas>
+                  [chartType]="'polarArea'"></canvas>
               </div>
             </div>
           </div>
@@ -79,9 +83,7 @@
                   [datasets]="speakUpDatas"
                   [labels]="vocalSpeakers"
                   [legend]="false"
-                  [chartType]="'bar'"
-                  (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)"></canvas>
+                  [chartType]="'bar'"></canvas>
               </div>
             </div>
           </div>

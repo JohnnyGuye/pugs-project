@@ -66,12 +66,15 @@ export class DataService {
   constructor() {
     this.testData()
     this.socket = new Socket()
+    this.initSRKeyMimic()
+  }
+
+  initSRKeyMimic() {
     addEventListener(
       "keydown",
       (ev: KeyboardEvent) => {
         let cst =  +ev.key
         if(Number.isNaN(cst) || this.activeKeys[cst])  return
-        console.log(cst)
         this.activeKeys[cst] = Date.now();
       })
     addEventListener(
@@ -101,7 +104,10 @@ export class DataService {
       let data = JSON.parse(ev.data)
       //console.log("Recieved: ", data)
       switch(data.dataType) {
-        case "speaking_data":
+        case DataTypes.RESETED:
+          this.data.reset()
+          break;
+        case DataTypes.SPEAKER_DATA:
 
           //console.log(this.data)
           if(this.data.start == null)  this.data.start = new Date(data.timestamp)
@@ -112,7 +118,6 @@ export class DataService {
             if(speaker.name)
               this.data.addTimeTo(speaker.name, speaker.timeSpoken)
           }
-          console.log(data)
           break;
         default:
           console.log(data.dataType)
@@ -130,8 +135,9 @@ export class DataService {
     )
   }
 
-  mimicSpeak(speakerName: string) {
-
+  resetConversation() {
+    if(this.socket.isClose_ing()) return
+    this.socket.send({dataType: DataTypes.ASK_RESET})
   }
 
   get isSocketOpen(): boolean {

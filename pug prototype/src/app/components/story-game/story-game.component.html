@@ -1,0 +1,55 @@
+<div *ngIf="!words || words.length < 10">
+  <p>
+  Let's break the ice !<br />
+  We have a little game for a warm up
+  We will show you 10 words
+  Someone will start a story using one of these words
+  At the end of each sentence, an other person has to continue the story
+  Try to keep the story fluid even if it doesn't make sence at all
+  Click on the words used to discard them. End the game when you are done
+  Don't let people on the edge! There is nothing to lose or win, participate!
+  Have fun!
+  :)
+  </p>
+  <button (click)="start()">Start</button>
+</div>
+
+<div *ngIf="words && words.length == 10" class="grid-style">
+  <div class="box">
+    <div class="row-clock align-right" (click)="replaceWord(0)">
+      {{words[0]}}
+    </div>
+    <div class="row-clock align-center" (click)="replaceWord(2)">
+      {{words[2]}}
+    </div>
+    <div class="row-clock align-left" (click)="replaceWord(4)">
+      {{words[4]}}
+    </div>
+    <div class="row-clock align-center" (click)="replaceWord(6)">
+      {{words[6]}}
+    </div>
+    <div class="row-clock align-right" (click)="replaceWord(8)">
+      {{words[8]}}
+    </div>
+  </div>
+  <div class="box">
+    <div class="row-clock align-left" (click)="replaceWord(1)">
+      {{words[1]}}
+    </div>
+    <div class="row-clock align-center" (click)="replaceWord(3)">
+      {{words[3]}}
+    </div>
+    <div class="row-clock align-right" (click)="replaceWord(5)">
+      {{words[5]}}
+    </div>
+    <div class="row-clock align-center" (click)="replaceWord(7)">
+      {{words[7]}}
+    </div>
+    <div class="row-clock align-left" (click)="replaceWord(9)">
+      {{words[9]}}
+    </div>
+  </div>
+  <p>
+    Words used: {{wordsUsed}}
+  </p>
+</div>

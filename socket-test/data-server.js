@@ -18,7 +18,9 @@ let DataTypes = Object.freeze({
   HELLO:                "hello",
   ASK_SPEAKER_DATA:     "speaking_data_ask",
   SPEAKER_DATA:         "speaking_data",
-  SPEAKER_RECOGNITION_DATA:   "speaker_recognition_data"
+  SPEAKER_RECOGNITION_DATA:   "speaker_recognition_data",
+  ASK_RESET:            "ask_reset",
+  RESETED:              "reseted"
 })
 
 let SPEAKER_NAMES = ["Antoine", "Brandon", "Johnny", "Arafa", ""]
@@ -46,7 +48,8 @@ class SpeakerData {
     this.packageNumber = 0
     this.timestamp = Date.now()
     this.time = 0
-    this.speakers = []
+    if(this.speakers) this.speakers.length = 0
+    else              this.speakers = []
   }
 
   addSpeak(speak) {
@@ -65,6 +68,10 @@ class SpeakerData {
     if(this.speakers.length > 0)
       lsd.speakers    = this.speakers.slice(-1)
     return lsd
+  }
+
+  clear() {
+    this.init()
   }
 }
 
@@ -169,6 +176,11 @@ wsServer.on('request', function(request) {
       Log.log('From ' + userName + ': asks for speakers data');
       broadcastUTF(json)
 
+      break;
+
+    case DataTypes.ASK_RESET:
+      sessionSpeakerDatas.clear()
+      broadcastUTF(JSON.stringify({ dataType: DataTypes.RESETED }))
       break;
     default:
       break;
