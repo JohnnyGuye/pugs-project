@@ -38,7 +38,8 @@
           <br/>
           {{iWantToShowSomething}}
           <input [(ngModel)]="value" />
-          <button (click)="socketConnection()">Start</button>
+          <button *ngIf="!isSocketOpen" (click)="openConnection()">Start</button>
+          <button *ngIf="isSocketOpen" (click)="closeConnection()">Stop</button>
       </p>
       <!--button (click)="myFunction()">Press & Talk</button-->
 

@@ -14,14 +14,17 @@ export class Socket {
     return this.root + ":" + this.port
   }
 
-  open() {
+  open(onOpen: (ev: any) => void = null) {
     if(this.isOpen_ing()) this.socket.close()
     this.socket = new WebSocket(this.adress)
     this.socket.onmessage = (ev: any) => { this.onMessage(ev) }
     this.socket.onerror = (ev: any) => { console.error('Error: ', ev)  }
-    this.socket.onopen = (ev: any) => {
-      this.send({dataType: "hello", name: "Johnny"})
-    }
+    if(onOpen)
+      this.socket.onopen = onOpen
+    else
+      this.socket.onopen = (ev: any) => {
+        this.send({dataType: "hello", name: "Johnny"})
+      }
   }
 
   send(str: string);
@@ -41,11 +44,11 @@ export class Socket {
     console.log("Recieved: ", JSON.parse(ev.data))
   }
 
-  private isOpen_ing(): boolean {
+  isOpen_ing(): boolean {
     return (this.socket != null) && (this.socket.readyState == this.socket.OPEN || this.socket.readyState == this.socket.CONNECTING)
   }
 
-  private isClose_ing(): boolean {
+  isClose_ing(): boolean {
     return (this.socket != null) && (this.socket.readyState == this.socket.CLOSED || this.socket.readyState == this.socket.CLOSING)
   }
 }
@@ -53,13 +56,16 @@ export class Socket {
 @Injectable()
 export class DataService {
 
-  private _isSocketOpen: boolean = false
   data: Data = new Data();
   lastRecep: Date
   socket: Socket
 
-  /*constructor() {
+  constructor() {
     this.testData()
+    this.socket = new Socket()
+  }
+
+  openSocket(name: string = "UI - prototype") {
     this.socket = new Socket()
 
     this.socket.onMessage = (ev: any) => {
@@ -82,66 +88,22 @@ export class DataService {
           console.log(data.dataType)
       }
     }
-    this.socket.open()
-
-    setInterval(() => {
+    let polling = () => {
+      if(this.socket.isClose_ing())  return
       this.socket.send({dataType:"speaking_data_ask"})
-    },500)
-  }*/
-
-  dataServSocket() {
-    this.testData()
-    this.socket = new Socket()
-
-    this.socket.onMessage = (ev: any) => {
-      let data = JSON.parse(ev.data)
-      //console.log("Recieved: ", data)
-      switch(data.dataType) {
-        case "speaking_data":
-
-          //console.log(this.data)
-          if(this.data.start == null)  this.data.start = new Date(data.timestamp)
-          this.lastRecep = new Date(data.timestamp)
-
-          let speakers = data.speakers
-          for(let speaker of speakers) {
-            if(speaker.name)
-              this.data.addTimeTo(speaker.name, speaker.timeSpoken)
-          }
-          break;
-        default:
-          console.log(data.dataType)
+      setTimeout(polling, 500)
+    }
+    this.socket.open(
+      (ev: any) => {
+        this.socket.send({dataType: "hello", name: name})
+        polling()
       }
-    }
-    this.socket.open()
+    )
 
-    setInterval(() => {
-      this.socket.send({dataType:"speaking_data_ask"})
-    },500)
-  }
-
-  startSocket() {
-    this.dataServSocket()
-    this._isSocketOpen = true
-  }
-
-  stopSocket() {
-    this.socket.close()
-    this._isSocketOpen = false
-  }
-
-  toggleSocket() {
-    if(this.isSocketOpen) {
-      this.stopSocket()
-      console.log("soket being closed...");
-    } else {
-      this.startSocket()
-      console.log("soket openning...");
-    }
   }
 
   get isSocketOpen(): boolean {
-    return this._isSocketOpen
+    return this.socket.isOpen_ing()
   }
 
   get ellapsed() {
