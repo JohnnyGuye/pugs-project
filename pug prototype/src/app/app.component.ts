@@ -50,10 +50,14 @@ export class AppComponent {
 
   public value: string = "Arafa"
 
-  public myFunction() {
-    console.log("I pressed a button")
+  public socketConnection() {
+    console.log("socket start button pressed...")
+    return this.dataServ.toggleSocket()
   }
 
+  /*public get socketOpen(): boolean {
+    return this.dataServ.isSocketOpen
+  }*/
   public get iWantToShowSomething(): string {
     return "I'm something"
   }

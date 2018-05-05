@@ -53,11 +53,12 @@ export class Socket {
 @Injectable()
 export class DataService {
 
+  private _isSocketOpen: boolean = false
   data: Data = new Data();
   lastRecep: Date
   socket: Socket
 
-  constructor() {
+  /*constructor() {
     this.testData()
     this.socket = new Socket()
 
@@ -86,6 +87,61 @@ export class DataService {
     setInterval(() => {
       this.socket.send({dataType:"speaking_data_ask"})
     },500)
+  }*/
+
+  dataServSocket() {
+    this.testData()
+    this.socket = new Socket()
+
+    this.socket.onMessage = (ev: any) => {
+      let data = JSON.parse(ev.data)
+      //console.log("Recieved: ", data)
+      switch(data.dataType) {
+        case "speaking_data":
+
+          //console.log(this.data)
+          if(this.data.start == null)  this.data.start = new Date(data.timestamp)
+          this.lastRecep = new Date(data.timestamp)
+
+          let speakers = data.speakers
+          for(let speaker of speakers) {
+            if(speaker.name)
+              this.data.addTimeTo(speaker.name, speaker.timeSpoken)
+          }
+          break;
+        default:
+          console.log(data.dataType)
+      }
+    }
+    this.socket.open()
+
+    setInterval(() => {
+      this.socket.send({dataType:"speaking_data_ask"})
+    },500)
+  }
+
+  startSocket() {
+    this.dataServSocket()
+    this._isSocketOpen = true
+  }
+
+  stopSocket() {
+    this.socket.close()
+    this._isSocketOpen = false
+  }
+
+  toggleSocket() {
+    if(this.isSocketOpen) {
+      this.stopSocket()
+      console.log("soket being closed...");
+    } else {
+      this.startSocket()
+      console.log("soket openning...");
+    }
+  }
+
+  get isSocketOpen(): boolean {
+    return this._isSocketOpen
   }
 
   get ellapsed() {

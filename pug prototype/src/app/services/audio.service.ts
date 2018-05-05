@@ -43,8 +43,10 @@ export class AudioService {
   toggle() {
     if(this.isRecording) {
       this.stopRecord()
+      console.log("recording stopped...")
     } else {
       this.startRecord()
+      console.log("recording started...")
     }
   }
 
