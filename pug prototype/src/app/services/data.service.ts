@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Data, SpeakerData }    from "../models/data";
+import { UIData, UISpeakerData, DataTypes }    from "../models/data";
 
 export class Socket {
 
@@ -56,13 +56,42 @@ export class Socket {
 @Injectable()
 export class DataService {
 
-  data: Data = new Data();
+  data: UIData = new UIData();
   lastRecep: Date
   socket: Socket
+  readonly SPEAKER_NAMES = ["","Antoine", "Brandon", "Johnny", "Arafa"]
+
+  activeKeys = []
 
   constructor() {
     this.testData()
     this.socket = new Socket()
+    addEventListener(
+      "keydown",
+      (ev: KeyboardEvent) => {
+        let cst =  +ev.key
+        if(Number.isNaN(cst) || this.activeKeys[cst])  return
+        console.log(cst)
+        this.activeKeys[cst] = Date.now();
+      })
+    addEventListener(
+      "keyup",
+      (ev: KeyboardEvent) => {
+        let cst = +ev.key
+        if(Number.isNaN(cst))  return
+        if(cst < this.SPEAKER_NAMES.length && this.socket.isOpen_ing()) {
+          this.socket.send({
+            dataType: DataTypes.SPEAKER_RECOGNITION_DATA,
+            speakerName: this.SPEAKER_NAMES[cst],
+            duration: Date.now() - this.activeKeys[cst],
+            timestamp: Date.now()
+          })
+        }
+        this.activeKeys[cst] = 0;
+      }
+    )
+    for(let i = 0; i < 10; i++)
+      this.activeKeys.push( false )
   }
 
   openSocket(name: string = "UI - prototype") {
@@ -83,6 +112,7 @@ export class DataService {
             if(speaker.name)
               this.data.addTimeTo(speaker.name, speaker.timeSpoken)
           }
+          console.log(data)
           break;
         default:
           console.log(data.dataType)
@@ -91,14 +121,16 @@ export class DataService {
     let polling = () => {
       if(this.socket.isClose_ing())  return
       this.socket.send({dataType:"speaking_data_ask"})
-      setTimeout(polling, 500)
+      setTimeout(polling, 20000)
     }
     this.socket.open(
       (ev: any) => {
         this.socket.send({dataType: "hello", name: name})
-        polling()
       }
     )
+  }
+
+  mimicSpeak(speakerName: string) {
 
   }
 
@@ -113,13 +145,8 @@ export class DataService {
   }
 
   testData() {
-    this.data.addTimeTo("Johnny", 0)
-
-    this.data.addTimeTo("Brandon", 0)
-
-    this.data.addTimeTo("Antoine", 0)
-
-    this.data.addTimeTo("Arafa", 0)
+    for(let n of this.SPEAKER_NAMES)
+      if(n)this.data.addTimeTo(n, 0)
   }
 
 }

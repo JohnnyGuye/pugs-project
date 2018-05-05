@@ -48,7 +48,7 @@ export class AppComponent {
     return this.audioServ.isRecording
   }
 
-  public value: string = "Arafa"
+  public value: string = "UI - prototype"
 
   public openConnection() {
     this.dataServ.openSocket(this.value)

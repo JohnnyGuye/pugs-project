@@ -17,7 +17,8 @@ let config = {
 let DataTypes = Object.freeze({
   HELLO:                "hello",
   ASK_SPEAKER_DATA:     "speaking_data_ask",
-  SPEAKER_DATA:         "speaking_data"
+  SPEAKER_DATA:         "speaking_data",
+  SPEAKER_RECOGNITION_DATA:   "speaker_recognition_data"
 })
 
 let SPEAKER_NAMES = ["Antoine", "Brandon", "Johnny", "Arafa", ""]
@@ -149,6 +150,19 @@ wsServer.on('request', function(request) {
 
       break;
 
+    case DataTypes.SPEAKER_RECOGNITION_DATA:
+
+      let speak = new Speak()
+      speak.name = data.speakerName
+      speak.timeSpoken = data.duration
+      speak.timestamp = data.timestamp - data.duration
+
+      sessionSpeakerDatas.addSpeak( speak )
+      let last = sessionSpeakerDatas.lastSpeakData()
+
+      broadcastUTF( JSON.stringify( last ) )
+
+      break;
     case DataTypes.ASK_SPEAKER_DATA:
 
       let json = JSON.stringify( generateRandomSpeak() )
