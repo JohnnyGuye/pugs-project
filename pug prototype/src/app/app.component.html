@@ -44,6 +44,7 @@
           <br/>
           <input [(ngModel)]="value" />
           <button *ngIf="!isSocketOpen" (click)="openConnection()">Start</button>
+          <span *ngIf="isSocketOpening">Conection pending</span>
           <button *ngIf="isSocketOpen" (click)="closeConnection()">Stop</button>
           <button *ngIf="isSocketOpen" (click)="resetConversation()">Stop & Reset</button>
       </p>

@@ -21,14 +21,12 @@ export class AppComponent {
 
   public lineChartLegend:boolean = true;
 
-  private _vocalDatas = [{data: this.dataServ.data.timesSpokenPerc}]
   get vocalsDatas() {
     return [{data: this.dataServ.data.timesSpokenPerc}]
   }
 
-  private _speakUpDatas = [{data: this.dataServ.data.speakUp}]
   get speakUpDatas() {
-    return this._speakUpDatas
+    return [{data: this.dataServ.data.speakUp}]
   }
 
   get vocalSpeakers() {
@@ -54,6 +52,10 @@ export class AppComponent {
 
   public openConnection() {
     this.dataServ.openSocket(this.value)
+  }
+
+  public get isSocketOpening() {
+    return this.dataServ.socket.socket && (this.dataServ.socket.socket.readyState == WebSocket.CONNECTING)
   }
 
   public closeConnection() {

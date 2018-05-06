@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 
 import { UIData, UISpeakerData, DataTypes }    from "../models/data";
 
+const herokuAdress = "ws://rocky-peak-17324.herokuapp.com"
+const localAdress = "ws://localhost"
 export class Socket {
 
   socket: WebSocket = null
 
-  constructor(private root: string = "ws://localhost", private port: number = 8001 ) {
+  constructor(private root: string = localAdress, private port: number = 8001 ) {
 
   }
 
